@@ -10,23 +10,23 @@ const courseModel = new Schema({
     },
     description: {
         type: String,
-        required: [true, "title is required"],
-        minLength: [8, "title must be atlest 8 characters"],
-        maxLength: [200, "title should be less than 60 characters"],
+        required: [true, "description is required"],
+        minLength: [8, "description must be atlest 8 characters"],
+        maxLength: [200, "description should be less than 60 characters"],
         trim: true,
     },
     category: {
         type: String,
-        required: [true, "title is required"],
+        required: [true, "category is required"],
     },
     thumbnail: {
         public_id: {
             type: String,
-            required: [true, "title is required"],
+            required: [true, "public id is required"],
         },
         secure_url: {
             type: String,
-            required: [true, "title is required"],
+            required: [true, "secure url is required"],
         }
     },
     lectures: [
@@ -36,11 +36,11 @@ const courseModel = new Schema({
             lecture: {
                 public_id: {
                     type: String,
-                    required: true,
+                    // required: true,
                 },
                 secure_url: {
                     type: String,
-                    required: true
+                    // required: true
                 }
             },
         }

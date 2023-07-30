@@ -1,17 +1,44 @@
 import { Router } from 'express';
-import { getAllCourses, getLecturesByCourseId } from '../controllers/course.controllers';
-import { isLoggedIn } from '../middlewares/auth.middleware';
+import { addLecturesToCourseById, createCourse, getAllCourses, getLecturesByCourseId, removeCourse, updateCourse } from '../controllers/course.controllers.js';
+import { authorizationRoles, isLoggedIn } from '../middlewares/auth.middleware.js';
+import upload from '../middlewares/multer.middleware.js';
 
 const router = Router();
 
-// router.route('/').get(getAllCourses); //! this method is used when we want to hit multiple routes (get, post)
+// router.get('/', getAllCourses);
 
 // router.get('/:id', getLecturesByCourseId);
 
-router.get('/', getAllCourses);
-router.route('/:id').get(isLoggedIn ,getLecturesByCourseId);
+//! this method is used when we want to hit multiple routes (get, post, put etc...)
 
+    //* in create course we dont need course id
+router.route('/')
+    .get(getAllCourses)
+    .post( isLoggedIn,
+        authorizationRoles('ADMIN'), 
+        upload.single('thumbnail'), 
+        createCourse);    
 
+    //* in update and delete we need course id
+router.route('/:id')
+    .get(isLoggedIn, getLecturesByCourseId)
+    .put(isLoggedIn,
+        authorizationRoles('ADMIN'), 
+        updateCourse)         
+    .delete( isLoggedIn,
+        authorizationRoles('ADMIN'), 
+        removeCourse)
+    .post( isLoggedIn,
+        authorizationRoles('ADMIN'), 
+        upload.single('lecture'), 
+        addLecturesToCourseById
+    );          
+    
+    // router.delete('/deleteLecture/:id',
+    //     isLoggedIn,
+    //     authorizationRoles('ADMIN'), 
+    //     deleteLecture
+    //     );
 
 
 export default router;
