@@ -104,7 +104,8 @@ const login = async (req, res, next)=>{
     
         const user = await User.findOne({ email }).select('+password');
     
-        if(!user || !user.comparePassword(password)) {
+        // we made comparePassword method in the userModel
+        if(!user || !user.comparePassword(password)) {      
             return next(new AppError('Email or passoword does not match', 400))
         }
     
@@ -145,7 +146,7 @@ const logout = (req, res)=>{
 const getProfile = async (req, res, next)=>{
 
     try {
-        const userId = req.user.id;
+        const userId = req.user.id;         // cookies me jo use ke id set ke hai bo
         const user = await User.findOne({userId})  
         
         res.status(200).json({

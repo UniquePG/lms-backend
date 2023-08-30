@@ -6,6 +6,7 @@ import cors  from 'cors';
 import cookieParser  from 'cookie-parser';
 import morgan from 'morgan';
 import userRoutes from './routes/user.routes.js'
+import paymentRoutes from './routes/payment.routes.js'
 import errorMiddleWare from './middlewares/error.middleware.js';
 import courseRoutes from  './routes/course.routes.js'
 
@@ -31,6 +32,7 @@ app.use('/ping', (req, res)=>{
     //* User Router
 app.use('/api/v1/user', userRoutes)
 app.use('/api/v1/courses', courseRoutes)
+app.use('/api/v1/payments', paymentRoutes)
 
 
 

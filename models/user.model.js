@@ -41,7 +41,12 @@ const userSchema = new Schema({
         default: 'USER'
     },
     forgotPasswordToken: String,
-    forgotPasswordExpiry: Date
+    forgotPasswordExpiry: Date,
+
+    subscription: {
+        id: String,
+        status: String
+    }
 
 
 }, {
@@ -62,9 +67,9 @@ userSchema.pre('save', async function(next){
 
 
 
-//JWT token
 userSchema.methods = {
-
+    
+    //JWT token
     generateJWTToken: async function() {
         return await jwt.sign(
             {id: this._id, email: this.email, subscription: this.subscription, role: this.role},
@@ -93,5 +98,5 @@ userSchema.methods = {
 }
 
 
-const User = model("USer", userSchema);
+const User = model("User", userSchema);
 export default User;

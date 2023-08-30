@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { addLecturesToCourseById, createCourse, getAllCourses, getLecturesByCourseId, removeCourse, updateCourse } from '../controllers/course.controllers.js';
-import { authorizationRoles, isLoggedIn } from '../middlewares/auth.middleware.js';
+import { authorizationRoles, authorizedSubscriber, isLoggedIn } from '../middlewares/auth.middleware.js';
 import upload from '../middlewares/multer.middleware.js';
 
 const router = Router();
@@ -21,7 +21,7 @@ router.route('/')
 
     //* in update and delete we need course id
 router.route('/:id')
-    .get(isLoggedIn, getLecturesByCourseId)
+    .get(isLoggedIn, authorizedSubscriber, getLecturesByCourseId)
     .put(isLoggedIn,
         authorizationRoles('ADMIN'), 
         updateCourse)         
