@@ -1,14 +1,15 @@
-import { config } from 'dotenv'
+import { config } from 'dotenv';
 config();
 
-import express  from 'express';
-import cors  from 'cors';
-import cookieParser  from 'cookie-parser';
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
+import express from 'express';
 import morgan from 'morgan';
-import userRoutes from './routes/user.routes.js'
-import paymentRoutes from './routes/payment.routes.js'
 import errorMiddleWare from './middlewares/error.middleware.js';
-import courseRoutes from  './routes/course.routes.js'
+import courseRoutes from './routes/course.routes.js';
+import paymentRoutes from './routes/payment.routes.js';
+import userRoutes from './routes/user.routes.js';
+import misroutes from './routes/Misllenious.routes.js'
 
 const app = express();
 
@@ -16,7 +17,7 @@ app.use(express.json()) // req body se jo data ayega bo json me parse hoke ayega
 app.use(express.urlencoded( {extended: true }));  // url ko encode krne ke liye(query params bgera nikalne me) 
 
 app.use(cors({
-    origin: [process.env.CLIENT_URL],
+    origin: [process.env.FRONTEND_URL],
     credentials: true
 }))
 
@@ -33,6 +34,7 @@ app.use('/ping', (req, res)=>{
 app.use('/api/v1/user', userRoutes)
 app.use('/api/v1/courses', courseRoutes)
 app.use('/api/v1/payments', paymentRoutes)
+app.use('/api/v1', misroutes)
 
 
 

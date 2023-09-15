@@ -25,7 +25,7 @@ const register = async (req, res, next)=>{
 
     const userExists = await User.findOne({ email });
     if(userExists){
-        return next(new AppError('Email already Exists', 400))
+        return next(new AppError('Email already Exists', 409))
     }
 
     const user = await User.create({
