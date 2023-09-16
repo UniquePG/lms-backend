@@ -175,21 +175,78 @@ export const cancleSubscription = async (req, res, next) => {
 
 export const allPayments = async (req, res, next) => {
 
-    const { count } = req.query;
+    const { count, skip } = req.query;
 
     try {
          //* get all subscription details from razorpay
         const subscriptions = await razorpay.subscriptions.all({   
-            count: count || 10,
+            count: count || 10,     // If count is sent then use that else default to 10
+            skip: skip ? skip : 0  // If skip is sent then use that else default to 0
         })
 
-        res.status(200).json({
+        // define months
+        const monthNames = [
+            'January',
+            'February',
+            'March',
+            'April',
+            'May',
+            'June',
+            'July',
+            'August',
+            'September',
+            'October',
+            'November',
+            'December',
+          ];
+        
+          const finalMonths = {
+            January: 0,
+            February: 0,
+            March: 0,
+            April: 0,
+            May: 0,
+            June: 0,
+            July: 0,
+            August: 0,
+            September: 0,
+            October: 0,
+            November: 0,
+            December: 0,
+          };
+
+          // fetch month wise payments
+          const monthlyWisePayments = allPayments.items.map((payment) => {
+            // We are using payment.start_at which is in unix time, so we are converting it to Human readable format using Date()
+            const monthsInNumbers = new Date(payment.start_at * 1000);
+        
+            return monthNames[monthsInNumbers.getMonth()];
+          });
+
+
+        monthlyWisePayments.map((month) => {
+            Object.keys(finalMonths).forEach((objMonth) => {
+              if (month === objMonth) {
+                finalMonths[month] += 1;
+              }
+            });
+          });
+
+        
+          // find monthly sale records
+        const monthlySalesRecord = [];
+
+          Object.keys(finalMonths).forEach((monthName) => {
+            monthlySalesRecord.push(finalMonths[monthName]);
+          });
+
+          res.status(200).json({
             success: true,
             message: "All payments",
-            subscriptions
-        })
-
-
+            subscriptions,
+            finalMonths,
+            monthlySalesRecord,
+        });
 
     } catch (error) {
         return next( new AppError(error.message, 400))
