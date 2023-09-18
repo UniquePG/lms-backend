@@ -147,12 +147,12 @@ const getProfile = async (req, res, next)=>{
 
     try {
         const userId = req.user.id;         // cookies me jo use ke id set ke hai bo
-        const user = await User.findOne({userId})  
+        const user = await User.findById(userId)  
         
         res.status(200).json({
             success: true,
             message: 'User details',
-            user: user
+            user,
         })
 
     } catch (error) {
@@ -308,7 +308,7 @@ const updateUser = async (req, res, next) => {
 
     const { fullname } = req.body;
     
-    const { id } = req.user.id;
+    const { id } = req.params;
 
     const user = await User.findById(id);
 
@@ -352,7 +352,8 @@ const updateUser = async (req, res, next) => {
 
     res.status(200).json({
         success: true,
-        message: "User profile updated successfully"
+        message: "User profile updated successfully",
+        user
     })
 
 }
