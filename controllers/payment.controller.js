@@ -1,8 +1,10 @@
-import { config } from 'dotenv'
-config();
+import crypto from 'crypto';
+import { config } from 'dotenv';
 import User from '../models/user.model.js';
-import AppError from '../utils/error.util.js';
 import { razorpay } from '../server.js';
+import AppError from '../utils/error.util.js';
+import Payment from "../models/payment.model.js"
+config();
 
 
 export const getRazorpayApiKey = async (req, res, next) => {
@@ -30,7 +32,7 @@ export const buySubscription = async (req, res, next) => {
         const { id } = req.user;
     
         const user = await User.findById(id);
-    
+    // console.log("find user", user);
         if(!user) {
             return next(
                 new AppError("Unauthorized user, please login", 400)
@@ -46,13 +48,16 @@ export const buySubscription = async (req, res, next) => {
         // make a subscription
         const subscription = await razorpay.subscriptions.create({
             plan_id: process.env.RAZORPAY_PLAN_ID,
-            customer_notify: 1
+            customer_notify: 1,  // 1 means razorpay will handle notifying the customer, 0 means we will not notify the customer
+            total_count: 12, // 12 means it will charge every month for a 1-year sub.
         });
     
+        console.log("subscription create");
         // store subscription detail at the user level
         user.subscription.id = subscription.id;
         user.subscription.status = subscription.status;
     
+        console.log("subscription id",subscription.id);
         //now save user
         await user.save();
     
@@ -78,7 +83,7 @@ export const verifySubscription = async (req, res, next) => {
         
         const { id } = req.user;
     
-        const { razorpay_payment_id, razorpay_signature, razorpay_subscription_id } = req.body;
+        const { razorpay_payment_id, razorpay_subscription_id, razorpay_signature } = req.body;
     
         const user = await User.findById(id);
     
@@ -90,12 +95,16 @@ export const verifySubscription = async (req, res, next) => {
     
         const subscriptionId = user.subscription.id;
     
+        console.log("subscriptionid ", subscriptionId);
+        console.log("secret key ", process.env.RAZORPAY_SECRET);
         //* now create a signature and then compare our signature with actual signature
         const generatedSignature = crypto
                                         .createHmac('sha256', process.env.RAZORPAY_SECRET)
                                         .update(`${razorpay_payment_id}|${subscriptionId}`)
                                         .digest('hex')
     
+        console.log("generated signature ", generatedSignature);
+        console.log("razorpay signature ", razorpay_signature);
         // Now we compare this signature
         if(generatedSignature !== razorpay_signature){
             return next(
@@ -103,11 +112,16 @@ export const verifySubscription = async (req, res, next) => {
             )
         }
     
+        console.log("signature matched");
+        console.log("subscription id ", razorpay_subscription_id);
+
         await Payment.create({
             razorpay_payment_id,
-            razorpay_signature,
-            razorpay_subscription_id
+            razorpay_subscription_id,
+            razorpay_signature
         });
+
+        console.log("payment create");
     
         // mark payment status active
         user.subscription.status = 'active'
