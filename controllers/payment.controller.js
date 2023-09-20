@@ -1,9 +1,9 @@
 import crypto from 'crypto';
 import { config } from 'dotenv';
+import Payment from "../models/payment.model.js";
 import User from '../models/user.model.js';
 import { razorpay } from '../server.js';
 import AppError from '../utils/error.util.js';
-import Payment from "../models/payment.model.js"
 config();
 
 
@@ -158,7 +158,7 @@ export const cancleSubscription = async (req, res, next) => {
     
         if(user.role === 'ADMIN'){
             return next(
-                new AppError("Admin can not puchage subscription", 400)
+                new AppError("Admin can not purchage subscription", 400)
             )
         }
     
@@ -174,15 +174,29 @@ export const cancleSubscription = async (req, res, next) => {
     
         await user.save();
 
-        res.status.json({
-            success: true,
-            message: "subscription is cancled"
-        })
+                // //find the payment using subscription id
+                // const payment = await Payment.findOne({
+                //     razorpay_subscription_id: subscriptionId
+                // })
+        
+                // // now set subscription details undefined in user
+                // user.subscription.id = undefined;
+                // user.subscription.status = undefined;
+                
+                // await user.save();
+                // await payment.remove();    // remove the payment from db
+                
+                res.status(200).json({
+                    success: true,
+                    message: "subscription is canceled"
+                })
+
     } catch (error) {
         return next(
             new AppError(error.message, 500 )
-        )
-    }
+            )
+        }
+
 
 
 } 

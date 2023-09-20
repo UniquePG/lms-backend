@@ -25,9 +25,6 @@ app.use(cookieParser()) // cookie ke ander token bgera ko parse karne ke liye
 
 app.use(morgan('dev'))  // agr use koi bhi url hit krega uska status console me print hoga
 
-app.use('/ping', (req, res)=>{
-    res.send("Pong")
-})
 
 // Routes of 3 Modules
     //* User Router
