@@ -37,6 +37,8 @@ const getLecturesByCourseId = async (req, res, next) => {
         const course = await Course.findById(id);
         // console.log(id);     // for debugging
 
+        console.log("get lectures", id, course);
+
         if(!course){
             return new AppError("Courses not found", 400)
         }
@@ -195,7 +197,9 @@ const addLecturesToCourseById = async (req, res, next) => {
         if(req.file){
             try {
                 const result = await cloudinary.v2.uploader.upload(req.file.path, {
-                    folder: 'lms'
+                    folder: 'lms',
+                    chunk_size: 100000000, // 100 mb size
+                    resource_type: 'video',
                 });
         
                 if(result){
@@ -234,6 +238,7 @@ const deleteLecturesFromCourse = async (req, res, next)=> {
         // Grabbing the courseId and lectureId from req.query
         const { courseId, lectureId } = req.query;
 
+        console.log("backend...",courseId, lectureId);
         // Checking if both courseId and lectureId are present
         if (!courseId) {
             return next(new AppError('Course ID is required', 400));

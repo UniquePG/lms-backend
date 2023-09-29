@@ -6,12 +6,18 @@ const sendEmail = async function (email, subject, message){
 
     // create reusable transporter object using the default STMP transport
     let transporter = nodemailer.createTransport({
-        host: process.env.SMTP_HOST,
-        port: process.env.SMTP_PORT,
-        secure: false, // true for 465, false for other port
+             //* when u r using eherial credencials
+        // host: process.env.SMTP_HOST,
+        // port: process.env.SMTP_PORT,
+        // secure: false, // true for 465, false for other port
+        service: "gmail",           //* when u using your personal credencials
         auth: {
-            user: process.env.SMTP_USERNAME,
-            pass: process.env.SMTP_PASSWORD,
+                     //* when u r using eherial credencials
+            // user: process.env.SMTP_USERNAME,    
+            // pass: process.env.SMTP_PASSWORD,
+                    //* when u using your personal credencials
+            user: process.env.ORIGINAL_EMAIL,       
+            pass: process.env.APP_PASSWORD, 
         },
     });
 

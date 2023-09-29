@@ -35,8 +35,9 @@ const authorizedSubscriber = async (req, res, next)=> {
         const subscription = req.user.subscription;
         const currentUserRole = req.user.role;
 
+        console.log("auth subs.",subscription);
         if(currentUserRole !== "ADMIN" && subscription.status !== 'active'){
-            return next( new AppError("Please subscription to access this course!", 403))
+            return next( new AppError("Please subscribe to access this course!", 403))
         }
 
         next()

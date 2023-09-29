@@ -10,6 +10,7 @@ import courseRoutes from './routes/course.routes.js';
 import paymentRoutes from './routes/payment.routes.js';
 import userRoutes from './routes/user.routes.js';
 import misroutes from './routes/Misllenious.routes.js'
+import sendEmail from './utils/sendmail2.js';
 
 const app = express();
 
@@ -33,6 +34,11 @@ app.use('/api/v1/courses', courseRoutes)
 app.use('/api/v1/payments', paymentRoutes)
 app.use('/api/v1', misroutes)
 
+
+app.get("/mail", (req, res)=>{ 
+    sendEmail("81204rohanguptaji@gmail.com", "text", "this is text message")
+    res.send("i am sending email")
+})
 
 
 //! Define routes ke alawa koi aur rounte hit hone par error throw
