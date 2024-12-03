@@ -38,7 +38,7 @@ app.use('/api/v1', misroutes)
 
 
 app.get("/mail", (req, res)=>{ 
-    sendEmail("81204rohanguptaji@gmail.com", "text", "this is text message")
+    sendEmail("grishav137@gmail.com", "text", "this is text message")
     res.send("i am sending email")
 })
 
