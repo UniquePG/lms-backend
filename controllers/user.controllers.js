@@ -63,7 +63,7 @@ const register = async (req, res, next)=>{
             user.avatar.secure_url = result.secure_url;
             
             //remove file from local storage
-            fs.rm(`uploads/${req.file.filename}`)
+            fs.rm(`/tmp/uploads/${req.file.filename}`)
         }
         
     } catch (e) {
@@ -340,7 +340,7 @@ const updateUser = async (req, res, next) => {
                 user.avatar.secure_url = result.secure_url;
                 
                 //remove file from local storage
-                fs.rm(`uploads/${req.file.filename}`)
+                fs.rm(`/tmp/uploads/${req.file.filename}`)
             }
             
         } catch (e) {

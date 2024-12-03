@@ -96,7 +96,7 @@ const createCourse = async (req, res, next) => {
             course.thumbnail.secure_url = result.secure_url;
         }
 
-        fs.rm(`uploads/${req.file.filename}`)
+        fs.rm(`/tmp/uploads/${req.file.filename}`)
 
     } catch (error) {
         return next(new AppError(error.message, 400));
@@ -207,7 +207,7 @@ const addLecturesToCourseById = async (req, res, next) => {
                     lectureData.lecture.secure_url = result.secure_url;
                 }
         
-                fs.rm(`uploads/${req.file.filename}`)
+                fs.rm(`/tmp/uploads/${req.file.filename}`)
         
             } catch (error) {
                 return next(new AppError(error.message, 400));
