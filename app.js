@@ -42,7 +42,7 @@ app.get("/mail", (req, res)=>{
     res.send("i am sending email")
 })
 
-app.get("/ping", (req, res)=> {
+app.get("/", (req, res)=> {
     console.log("pong");
 
     res.send("Welcome to my LMS project")
