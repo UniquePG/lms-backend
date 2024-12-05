@@ -17,10 +17,24 @@ const app = express();
 app.use(express.json()) // req body se jo data ayega bo json me parse hoke ayega
 app.use(express.urlencoded( {extended: true }));  // url ko encode krne ke liye(query params bgera nikalne me) 
 
+
+const allowedOrigins = ['https://lms-frontend-peach.vercel.app', "http://localhost:5173"];
+
 app.use(cors({
-    origin: [process.env.FRONTEND_URL, "http://localhost:5173"],
-    credentials: true
-}))
+    origin: (origin, callback) => {
+        if (allowedOrigins.includes(origin) || !origin) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true, // Required for cookies to be sent with requests
+}));
+
+// app.use(cors({
+//     origin: [process.env.FRONTEND_URL, "http://localhost:5173"],
+//     credentials: true
+// }))
 
 // app.use(cors({ origin: '*' }));
 
